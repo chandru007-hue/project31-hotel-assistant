@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hotel Guest Information Assistant</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, sans-serif; background: #f3f6fb; color: #18243a; }
+    header { background: #153b66; color: white; padding: 28px 20px; text-align: center; }
+    header h1 { margin: 0 0 8px; font-size: 27px; }
+    header p { margin: 0; color: #dce9f8; }
+    main { max-width: 900px; margin: 28px auto; padding: 0 16px; display: grid; gap: 20px; }
+    .card { background: white; padding: 24px; border-radius: 14px; box-shadow: 0 5px 18px #13294b12; }
+    h2 { margin-top: 0; color: #153b66; }
+    label { display: block; font-weight: 700; margin: 14px 0 7px; }
+    input { width: 100%; padding: 12px; border: 1px solid #c9d4e2; border-radius: 8px; font-size: 16px; }
+    button { margin-top: 16px; padding: 12px 18px; border: 0; border-radius: 8px; background: #1769aa; color: white; font-size: 16px; font-weight: 700; cursor: pointer; }
+    button:hover { background: #10558d; }
+    .result { margin-top: 18px; background: #edf7f1; border-left: 4px solid #258653; padding: 16px; border-radius: 8px; }
+    .error { margin-top: 18px; background: #fff0ef; border-left: 4px solid #c0392b; padding: 14px; border-radius: 8px; }
+    .note { color: #58677c; font-size: 14px; line-height: 1.5; }
+    .answer { margin-top: 18px; padding: 15px; background: #eef4ff; border-radius: 8px; line-height: 1.5; }
+    footer { text-align: center; padding: 0 20px 25px; color: #66758b; font-size: 13px; }
+    @media (min-width: 760px) { main { grid-template-columns: 1fr 1fr; align-items: start; } }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Hotel Guest Information Assistant</h1>
+  <p>Hotel policy answers and late-checkout charge estimates</p>
+</header>
+<main>
+  <section class="card">
+    <h2>Late Checkout Charge Estimator</h2>
+    <p class="note">Estimate the additional charge for checkout on your scheduled departure day. This does not extend your reservation.</p>
+    <form method="post">
+      <input type="hidden" name="action" value="estimate">
+      <label for="nightly_rate">Nightly room rate (INR)</label>
+      <input id="nightly_rate" name="nightly_rate" type="number" min="0.01" step="0.01" placeholder="e.g. 4000" required>
+      <label for="checkout_time">Checkout time (24-hour HH:MM)</label>
+      <input id="checkout_time" name="checkout_time" type="text" pattern="([01][0-9]|2[0-3]):[0-5][0-9]" placeholder="e.g. 14:30" required>
+      <button type="submit">Estimate checkout charge</button>
+    </form>
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    {% if result %}
+      <div class="result">
+        <h3>Estimate result</h3>
+        <p><strong>Checkout time:</strong> {{ result.checkout_time }}</p>
+        <p><strong>Charge percentage:</strong> {{ result.charge_percentage }}%</p>
+        <p><strong>Additional charge:</strong> ₹{{ "%.2f"|format(result.additional_charge) }}</p>
+        <p><strong>Approval required:</strong> {{ "Yes" if result.approval_required else "No" }}</p>
+        <p>{{ result.message }}</p>
+      </div>
+    {% endif %}
+  </section>
+  <section class="card">
+    <h2>Ask About the Hotel</h2>
+    <p class="note">Try: “When is breakfast served?” or “Is early check-in guaranteed?”</p>
+    <form method="post">
+      <input type="hidden" name="action" value="ask">
+      <label for="question">Your question</label>
+      <input id="question" name="question" type="text" value="{{ question }}" placeholder="Ask a hotel policy question..." required>
+      <button type="submit">Ask assistant</button>
+    </form>
+    {% if answer %}<div class="answer"><strong>Answer:</strong><br>{{ answer }}</div>{% endif %}
+  </section>
+</main>
+<footer>Classroom demo with fictional hotel policies. Reception must approve any checkout extension after 11 AM.</footer>
+</body>
+</html>

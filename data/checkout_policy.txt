@@ -1,0 +1,11 @@
+Checkout at or before 11 AM has no late-checkout charge.
+
+After 11 AM and up to 2 PM, the charge is 25 percent
+of the nightly room rate.
+
+After 2 PM and up to 6 PM, the charge is 50 percent
+of the nightly room rate.
+
+After 6 PM, the charge is 100 percent of the nightly rate.
+
+These bands apply to checkout on the scheduled departure day.
